@@ -4,7 +4,7 @@ import { extendTheme } from '@chakra-ui/react';
 const colors = {
   brand: {
     darkGreen: '#22543D', // Dark Green
-    amber: '#FFBF00', // Amber
+    amber: '#E09132', // Amber
     white: '#FFFFFF', // White
   },
 };
