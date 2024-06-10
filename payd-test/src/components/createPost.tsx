@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
-import { Box, Button, Input, Text, Textarea, VStack } from '@chakra-ui/react';
+import { Box, Button, Input, Text, Textarea, VStack, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 
 // Define the type for a Post
@@ -11,6 +11,7 @@ interface Post {
 }
 
 const CreatePost: React.FC = () => {
+  const toast = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState({ title: '', body: '', userID: '' });
 
@@ -24,12 +25,22 @@ const CreatePost: React.FC = () => {
           const response = await axios.post('https://jsonplaceholder.typicode.com/posts', newPost);
           setPosts([response.data, ...posts]);
           setNewPost({ title: '', body: '', userID: '' });
+        // success toast
+        toast({
+          title: "Post created.",
+          description: "Your post has been created successfully.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
       } catch (error) {
           console.error('Error creating post:', error);
       }
   }
+
+
   return (
-    <Box borderWidth="1px" borderRadius="lg" p={4} mt={10} minW="300px" height="100%">
+    <Box borderWidth="1px" borderRadius="lg" p={4} mt={10} minW="350px" h={"100%"} position={{ base: 'static', lg: 'sticky' }} top={10}>
       <VStack spacing={4} className="mb-4">
         <Text fontSize="2xl" fontWeight="bold">Create Post</Text>
         <Input
