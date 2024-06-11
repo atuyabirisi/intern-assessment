@@ -37,10 +37,10 @@ const customTheme = extendTheme({
             },
             variants: {
                 solid: {
-                    bg: 'brand.amber',
+                    bg: 'brand.darkGreen',
                     color: 'brand.white',
                     _hover: {
-                        bg: 'brand.darkGreen',
+                        bg: 'brand.amber',
                     },
                 },
             },
