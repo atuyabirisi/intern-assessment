@@ -20,7 +20,6 @@ const Posts: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts);
-    const [isHovered, setIsHovered] = useState(false);
 
     // Handle search change
     const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +83,10 @@ const Posts: React.FC = () => {
         }
     }
 
+    const indexOfLastPost = currentPage * POSTS_PER_PAGE;
+    const indexOfFirstPost = indexOfLastPost - POSTS_PER_PAGE;
+    const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+
     return (
     <Stack className="p-3" marginTop={"auto"} >
             <Stack direction={{ base: 'column', sm: 'column', md: 'row' , lg: 'row' }}
@@ -112,30 +115,32 @@ const Posts: React.FC = () => {
                         <Spinner />
                     ) : (
                         <>
-                            {filteredPosts.map((post) => (
-                                <Box key={post.id} borderWidth="1px" borderRadius="lg" bg={"brand.white"} m={"auto"} p={4} w={"100%"}
-                                    onMouseEnter={() => setIsHovered(true)}
-                                    onMouseLeave={() => setIsHovered(false)}
-                                    _hover={{
-                                        bg: 'brand.darkGreen', boxShadow: 'md', color: 'brand.white'
-                                    }}
-                                >
-                                    <Heading as="h2" color={isHovered ? "brand.amber" : "brand.darkGreen"} fontSize="xl" fontWeight="bold" mb={2}>
-                                        {post.title}
-                                    </Heading>
-                                    <Text fontSize={['sm', 'md']}>{post.body}</Text>
-                                    <Text fontSize="sm" color="teal">{post.userId}</Text>
-                                </Box>
-                            ))}
-                      </>
+                            {currentPosts.length > 0 ? (
+                                currentPosts.map((post) => (
+                                    <Box key={post.id} borderWidth="1px" borderRadius="lg" bg={"brand.white"} m={"auto"} p={4} w={"100%"}
+                                        _hover={{
+                                            bg: 'brand.amber', boxShadow: 'md', color: 'brand.white'
+                                        }}
+                                    >
+                                        <Heading as="h2" color="brand.darkGreen" fontSize="xl" fontWeight="bold" mb={2}>
+                                            {post.title}
+                                        </Heading>
+                                        <Text fontSize={['sm', 'md']}>{post.body}</Text>
+                                        <Text fontSize="sm" color="teal">{post.userId}</Text>
+                                    </Box>
+                                ))
+                            ) : (
+                                <Text>No posts found.</Text>
+                            )}
+                        </>
                     )}
                 </VStack>
 
                 {/* Handle pagination */}
                 <HStack spacing={4} m={[0, 4]} justifyContent="center">
                     <Button fontWeight={"normal"} onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</Button>
-                    <Text>Page {currentPage} of {totalPages}</Text>
-                    <Button fontWeight={"normal"} onClick={handleNextPage} disabled={currentPage === totalPages}>Next</Button>
+                    <Text>Page {currentPage} of {Math.ceil(filteredPosts.length/ POSTS_PER_PAGE)}</Text>
+                    <Button fontWeight={"normal"} onClick={handleNextPage} disabled={currentPage === Math.ceil(filteredPosts.length/ POSTS_PER_PAGE)}>Next</Button>
                 </HStack>
             </Box>
         </Stack>
