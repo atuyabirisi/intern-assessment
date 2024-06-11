@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Button, Flex, HStack, Heading, Input, Skeleton, SkeletonText, Stack, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, HStack, Heading, Input, Spinner, Stack, Text, VStack } from '@chakra-ui/react';
 import axios from 'axios';
 import CreatePost from './createPost';
 
@@ -11,7 +11,7 @@ interface Post {
   userId: number;
 }
 
-const POSTS_PER_PAGE = 10; // Number of posts to display per page
+const POSTS_PER_PAGE = 5; // Number of posts to display per page
 
 const Posts: React.FC = () => {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -21,7 +21,7 @@ const Posts: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts);
 
-    // Handle search
+    // Handle search change
     const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
         setSearchQuery(value);
@@ -57,7 +57,7 @@ const Posts: React.FC = () => {
                 console.error('Error fetching posts:', error);
             }
             // Simulate loading delay
-            setTimeout(() => setLoading(false), 2000);
+            setTimeout(() => setLoading(false), 1000);
         }
         fetchPosts();
     }, [currentPage]);
@@ -84,37 +84,41 @@ const Posts: React.FC = () => {
     }
 
     return (
-        <Stack className="p-3" marginTop={"auto"}>
-            <Stack direction={['column', 'row']} spacing='30px' justify="space-evenly">
-                <CreatePost onPostCreated={handlePostCreated} />
+    <Stack className="p-3" marginTop={"auto"} >
+            <Stack direction={{ base: 'column', sm: 'column', md: 'row' , lg: 'row' }}
+                w={{base:"90%", sm:"80%"}} m={{base:"auto", sm:"auto"}}
+                spacing='30px' justify="space-evenly">
+            <CreatePost onPostCreated={handlePostCreated} />
 
-            <Box maxW="700px">
-                <VStack spacing={6} className="mb-4">
-                    <HStack mt={8} align={'center'} justifyContent={'space-between'}>
-                        <Text fontSize="2xl" fontWeight="bold">Posts</Text>
-                        <Input
+            <Box maxW="650px" w={{lg:'100%'}} m={"inherit"}>
+                <VStack spacing={6} className="mb-4 pr-0">
+                    <Text fontSize="3xl" fontWeight="bold" color="brand.darkGreen" mt={6}>Recent Posts</Text>
+                    <Input
                         placeholder="Search posts..."
                         value={searchQuery}
                         onChange={onSearchChange}
-                        width="300px"
+                        maxW="300px"
+                        width={{ base: "100%", sm: "75%", md: "60%", lg: "45%" }}
                         borderColor="brand.amber"
                         mt={4}
-                        alignSelf={'flex-end'}
+                        alignSelf={{base:'center', lg:'flex-end'}}
                         _placeholder={{ color: 'gray.500' }}
-                        />
-                    </HStack>
+                    />
 
                     {/* Display posts */}
                     { loading ? (
-                        <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='20' color={'black'} />
+                        <Spinner />
                     ) : (
                         <>
                             {filteredPosts.map((post) => (
-                                <Box key={post.id} borderWidth="1px" borderRadius="lg" p={4}
+                                <Box key={post.id} borderWidth="1px" borderRadius="lg" m={"auto"} p={4} w={"100%"}
                                     _hover={{
                                         bg: 'brand.darkGreen', boxShadow: 'md', color: 'brand.white'
-                                    }}>
-                                    <Heading as="h2" fontSize="xl" fontWeight="bold" mb={2}>{post.title}</Heading>
+                                    }}
+                                >
+                                    <Heading as="h2" color="brand.amber" fontSize="xl" fontWeight="bold" mb={2}>
+                                        {post.title}
+                                    </Heading>
                                     <Text>{post.body}</Text>
                                     <Text fontSize="sm" color="teal">{post.userId}</Text>
                                 </Box>
@@ -125,9 +129,9 @@ const Posts: React.FC = () => {
 
                 {/* Handle pagination */}
                 <HStack spacing={4} m={[0,4]} justifyContent="center">
-                    <Button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</Button>
+                    <Button fontWeight={"normal"} onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</Button>
                     <Text>Page {currentPage} of {totalPages}</Text>
-                    <Button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</Button>
+                    <Button fontWeight={"normal"} onClick={handleNextPage} disabled={currentPage === totalPages}>Next</Button>
                 </HStack>
             </Box>
         </Stack>
