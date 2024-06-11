@@ -27,40 +27,36 @@ const Posts: React.FC = () => {
         setSearchQuery(value);
     }
 
+    // Get posts for current page
+    const getPostsForPage = (allPosts: Post[]) => {
+        const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+        return allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+    };
+
     // Handle search
-  useEffect(() => {
-    if (searchQuery) {
-      const filtered = posts.filter((post) =>
-        post.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setFilteredPosts(filtered);
-    } else {
-      setFilteredPosts(posts);
-    }
-  }, [searchQuery, posts]);
+    useEffect(() => {
+        let currentPosts = posts;
+        if (searchQuery) {
+        currentPosts = posts.filter((post) =>
+            post.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setCurrentPage(1);
+        }
+        setFilteredPosts(getPostsForPage(currentPosts));
+        setTotalPages(Math.ceil(currentPosts.length / POSTS_PER_PAGE));
+    }, [searchQuery, posts, currentPage]);
 
     // Fetch posts
     useEffect(() => {
-        const fetchPosts = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-                    params: {
-                        _page: currentPage,
-                        _limit: POSTS_PER_PAGE
-                    }
-                });
-                setPosts(response.data);
-                const totalPosts = parseInt(response.headers['x-total-count'], 10);
-                setTotalPages(Math.ceil(totalPosts / POSTS_PER_PAGE));
-            } catch (error) {
-                console.error('Error fetching posts:', error);
-            }
-            // Simulate loading delay
-            setTimeout(() => setLoading(false), 1000);
-        }
-        fetchPosts();
-    }, [currentPage]);
+        setLoading(true);
+        axios.get('https://jsonplaceholder.typicode.com/posts')
+            .then(response => {
+            setPosts(response.data);
+            setTotalPages(Math.ceil(response.data.length / POSTS_PER_PAGE));
+            })
+            .catch(error => console.error(error))
+            .finally(() => setLoading(false));
+        }, []);
 
     // Handling post creation
     const handlePostCreated = useCallback((newPost: Post) => {
@@ -82,10 +78,6 @@ const Posts: React.FC = () => {
             window.scrollTo(0, 0);
         }
     }
-
-    const indexOfLastPost = currentPage * POSTS_PER_PAGE;
-    const indexOfFirstPost = indexOfLastPost - POSTS_PER_PAGE;
-    const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
 
     return (
     <Stack className="p-3" marginTop={"auto"} >
@@ -115,8 +107,8 @@ const Posts: React.FC = () => {
                         <Spinner />
                     ) : (
                         <>
-                            {currentPosts.length > 0 ? (
-                                currentPosts.map((post) => (
+                            {filteredPosts.length > 0 ? (
+                                filteredPosts.map((post) => (
                                     <Box key={post.id} borderWidth="1px" borderRadius="lg" bg={"brand.white"} m={"auto"} p={4} w={"100%"}
                                         _hover={{
                                             bg: 'brand.amber', boxShadow: 'md', color: 'brand.white'
@@ -137,10 +129,10 @@ const Posts: React.FC = () => {
                 </VStack>
 
                 {/* Handle pagination */}
-                <HStack spacing={4} m={[0, 4]} justifyContent="center">
+                <HStack spacing={4} m={4} justifyContent="center">
                     <Button fontWeight={"normal"} onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</Button>
-                    <Text>Page {currentPage} of {Math.ceil(filteredPosts.length/ POSTS_PER_PAGE)}</Text>
-                    <Button fontWeight={"normal"} onClick={handleNextPage} disabled={currentPage === Math.ceil(filteredPosts.length/ POSTS_PER_PAGE)}>Next</Button>
+                    <Text>Page {currentPage} of {totalPages}</Text>
+                    <Button fontWeight={"normal"} onClick={handleNextPage} disabled={currentPage === totalPages}>Next</Button>
                 </HStack>
             </Box>
         </Stack>
