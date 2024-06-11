@@ -119,7 +119,7 @@ const Posts: React.FC = () => {
                                     <Heading as="h2" color="brand.amber" fontSize="xl" fontWeight="bold" mb={2}>
                                         {post.title}
                                     </Heading>
-                                    <Text>{post.body}</Text>
+                                    <Text fontSize={['sm', 'md']}>{post.body}</Text>
                                     <Text fontSize="sm" color="teal">{post.userId}</Text>
                                 </Box>
                             ))}
@@ -128,7 +128,7 @@ const Posts: React.FC = () => {
                 </VStack>
 
                 {/* Handle pagination */}
-                <HStack spacing={4} m={[0,4]} justifyContent="center">
+                <HStack spacing={4} m={[0, 4]} justifyContent="center">
                     <Button fontWeight={"normal"} onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</Button>
                     <Text>Page {currentPage} of {totalPages}</Text>
                     <Button fontWeight={"normal"} onClick={handleNextPage} disabled={currentPage === totalPages}>Next</Button>

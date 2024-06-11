@@ -40,8 +40,7 @@ const CreatePost: React.FC<{ onPostCreated: (post: Post) => void }> = ({ onPostC
   return (
     <Box borderWidth="1px" borderRadius="lg" p={4} mt={10} minW="300px"
       w={{ base: '100%', lg: '400px' }} h={"100%"}
-      position={{ base: 'static', sm: 'static', md: 'sticky', lg: 'sticky' }}
-      m={[0, 4, 6, 8]} top={10}
+      position={{ base: 'static', sm: 'static', md: 'sticky', lg: 'sticky' }} top={10}
     >
       <VStack spacing={4} className="mb-4">
         <Text fontSize="2xl" fontWeight="bold" color="brand.darkGreen">Create Post</Text>
