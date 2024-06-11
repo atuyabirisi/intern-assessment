@@ -7,13 +7,12 @@ interface Post {
   id: number;
   title: string;
   body: string;
-  userID: number | string;
+  userId: number;
 }
 
-const CreatePost: React.FC = () => {
+const CreatePost: React.FC<{ onPostCreated: (post: Post) => void }> = ({ onPostCreated }) => {
   const toast = useToast();
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [newPost, setNewPost] = useState({ title: '', body: '', userID: '' });
+  const [newPost, setNewPost] = useState({ title: '', body: '', userId: '' });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
       const { name, value } = e.target;
@@ -23,50 +22,49 @@ const CreatePost: React.FC = () => {
   const handleCreatePost = async () => {
       try {
           const response = await axios.post('https://jsonplaceholder.typicode.com/posts', newPost);
-          setPosts([response.data, ...posts]);
-          setNewPost({ title: '', body: '', userID: '' });
-        // success toast
-        toast({
-          title: "Post created.",
-          description: "Your post has been created successfully.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
+          onPostCreated(response.data); // Notify parent component
+          setNewPost({ title: '', body: '', userId: '' });
+          // Success toast
+          toast({
+            title: "Post created.",
+            description: "Your post has been created successfully.",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
       } catch (error) {
           console.error('Error creating post:', error);
       }
   }
 
-
   return (
-    <Box borderWidth="1px" borderRadius="lg" p={4} mt={10} minW="350px" h={"100%"} position={{ base: 'static', lg: 'sticky' }} top={10}>
+    <Box borderWidth="1px" borderRadius="lg" p={4} mt={10} minW="350px" h={"100%"} position={{ base: 'static', md: 'static', lg: 'sticky' }} top={10}>
       <VStack spacing={4} className="mb-4">
-        <Text fontSize="2xl" fontWeight="bold">Create Post</Text>
+        <Text fontSize="2xl" fontWeight="bold" color="brand.darkGreen">Create Post</Text>
         <Input
-        focusBorderColor='lime'
-        placeholder="Enter Title"
-        name="title"
-        value={newPost.title}
-        onChange={handleInputChange}
-        className="mb-2"
+          focusBorderColor='lime'
+          placeholder="Enter Title"
+          name="title"
+          value={newPost.title}
+          onChange={handleInputChange}
+          className="mb-2"
         />
         <Textarea
-        focusBorderColor="lime"
-        placeholder="Enter Body"
-        name="body"
-        value={newPost.body}
-        onChange={handleInputChange}
-        className="mb-2"
-        resize="vertical"
+          focusBorderColor="lime"
+          placeholder="Enter Body"
+          name="body"
+          value={newPost.body}
+          onChange={handleInputChange}
+          className="mb-2"
+          resize="vertical"
         />
         <Input
-        focusBorderColor="lime"
-        placeholder="Enter userID"
-        name="userID"
-        value={newPost.userID}
-        onChange={handleInputChange}
-        className="mb-2"
+          focusBorderColor="lime"
+          placeholder="Enter userId"
+          name="userId"
+          value={newPost.userId}
+          onChange={handleInputChange}
+          className="mb-2"
         />
         <Button colorScheme="teal" onClick={handleCreatePost}>Submit</Button>
       </VStack>
@@ -74,4 +72,4 @@ const CreatePost: React.FC = () => {
   )
 }
 
-export default CreatePost
+export default CreatePost;
