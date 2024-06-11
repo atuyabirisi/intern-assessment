@@ -1,11 +1,13 @@
 import React from 'react';
-import './App.css';
+import Navbar from './components/Navbar';
 import Posts from './components/Posts';
 
-function App() {
+const App: React.FC = () => {
+
   return (
     <>
-      <Posts />
+      <Navbar />
+      <Posts/>
     </>
   );
 }
