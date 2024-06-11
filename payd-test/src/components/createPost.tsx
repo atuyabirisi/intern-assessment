@@ -38,7 +38,11 @@ const CreatePost: React.FC<{ onPostCreated: (post: Post) => void }> = ({ onPostC
   }
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" p={4} mt={10} minW="350px" h={"100%"} position={{ base: 'static', md: 'static', lg: 'sticky' }} top={10}>
+    <Box borderWidth="1px" borderRadius="lg" p={4} mt={10} minW="300px"
+      w={{ base: '100%', lg: '400px' }} h={"100%"}
+      position={{ base: 'static', sm: 'static', md: 'sticky', lg: 'sticky' }}
+      m={[0, 4, 6, 8]} top={10}
+    >
       <VStack spacing={4} className="mb-4">
         <Text fontSize="2xl" fontWeight="bold" color="brand.darkGreen">Create Post</Text>
         <Input
@@ -47,7 +51,6 @@ const CreatePost: React.FC<{ onPostCreated: (post: Post) => void }> = ({ onPostC
           name="title"
           value={newPost.title}
           onChange={handleInputChange}
-          className="mb-2"
         />
         <Textarea
           focusBorderColor="lime"
@@ -55,7 +58,6 @@ const CreatePost: React.FC<{ onPostCreated: (post: Post) => void }> = ({ onPostC
           name="body"
           value={newPost.body}
           onChange={handleInputChange}
-          className="mb-2"
           resize="vertical"
         />
         <Input
@@ -64,9 +66,8 @@ const CreatePost: React.FC<{ onPostCreated: (post: Post) => void }> = ({ onPostC
           name="userId"
           value={newPost.userId}
           onChange={handleInputChange}
-          className="mb-2"
         />
-        <Button colorScheme="teal" onClick={handleCreatePost}>Submit</Button>
+        <Button fontWeight={"normal"} onClick={handleCreatePost}>Submit</Button>
       </VStack>
     </Box>
   )
