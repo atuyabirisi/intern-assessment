@@ -1,4 +1,6 @@
 import { extendTheme } from '@chakra-ui/react';
+import '@fontsource/lato';
+import '@fontsource/merriweather';
 
 // Define custom colors
 const colors = {
@@ -16,9 +18,12 @@ const customTheme = extendTheme({
         global: {
         'html, body': {
             bg: 'brand.white',
-            fontFamily: 'Arial, sans-serif'
         },
         },
+    },
+    fonts: {
+        heading: `'Lato', sans-serif`,
+        body: `'Merriweather', sans-serif`,
     },
     components: {
         Input: {
