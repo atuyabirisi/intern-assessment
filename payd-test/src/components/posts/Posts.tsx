@@ -20,6 +20,7 @@ const Posts: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts);
+    const [isHovered, setIsHovered] = useState(false);
 
     // Handle search change
     const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,6 +100,7 @@ const Posts: React.FC = () => {
                         onChange={onSearchChange}
                         maxW="300px"
                         width={{ base: "100%", sm: "75%", md: "60%", lg: "45%" }}
+                        bg={"brand.white"}
                         borderColor="brand.amber"
                         mt={4}
                         alignSelf={{base:'center', lg:'flex-end'}}
@@ -111,12 +113,14 @@ const Posts: React.FC = () => {
                     ) : (
                         <>
                             {filteredPosts.map((post) => (
-                                <Box key={post.id} borderWidth="1px" borderRadius="lg" m={"auto"} p={4} w={"100%"}
+                                <Box key={post.id} borderWidth="1px" borderRadius="lg" bg={"brand.white"} m={"auto"} p={4} w={"100%"}
+                                    onMouseEnter={() => setIsHovered(true)}
+                                    onMouseLeave={() => setIsHovered(false)}
                                     _hover={{
                                         bg: 'brand.darkGreen', boxShadow: 'md', color: 'brand.white'
                                     }}
                                 >
-                                    <Heading as="h2" color="brand.amber" fontSize="xl" fontWeight="bold" mb={2}>
+                                    <Heading as="h2" color={isHovered ? "brand.amber" : "brand.darkGreen"} fontSize="xl" fontWeight="bold" mb={2}>
                                         {post.title}
                                     </Heading>
                                     <Text fontSize={['sm', 'md']}>{post.body}</Text>

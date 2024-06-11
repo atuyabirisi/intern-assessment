@@ -38,7 +38,7 @@ const CreatePost: React.FC<{ onPostCreated: (post: Post) => void }> = ({ onPostC
   }
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" p={4} mt={10} minW="300px"
+    <Box borderWidth="1px" borderRadius="lg" p={4} mt={10} minW="300px"  bg={"brand.white"}
       w={{ base: '100%', lg: '400px' }} h={"100%"}
       position={{ base: 'static', sm: 'static', md: 'sticky', lg: 'sticky' }} top={10}
     >
